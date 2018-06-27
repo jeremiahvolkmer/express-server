@@ -1,0 +1,19 @@
+{
+  "name": "itc_230",
+  "version": "1.0.0",
+  "description": "class repo",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jeremiahvolkmer/itc_230.git"
+  },
+  "author": "Jeremiah Volkmer",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jeremiahvolkmer/itc_230/issues"
+  },
+  "homepage": "https://github.com/jeremiahvolkmer/itc_230#readme"
+}
