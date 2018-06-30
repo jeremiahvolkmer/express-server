@@ -1,11 +1,13 @@
 var http = require("http"); 
 var fs = require('fs');
+var mod = require('./mod.js')
 
 http.createServer(function(req,res) {
   var path = req.url.toLowerCase();
+
   switch(path) {
     case '/':
-    fs.readFile('home.html', function(err, data) {
+    fs.readFile('mod.js', function(err, data) {
         res.writeHead(200, {'Content-Type': 'text/html'});
         res.write(data);
         res.end();
