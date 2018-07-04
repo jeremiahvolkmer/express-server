@@ -29,6 +29,7 @@ let surfboards =
   exports.delete  = function(element)
   {
     surfboards.splice(element,1);
+    return surfboards;
   }
 
  
