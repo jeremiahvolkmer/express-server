@@ -1,46 +1,42 @@
 
-  var surfboards = [
-    {brand:'Lost', width:24.6, length:5.6, volume: 30, fins:'thruster'},
-    {brand:'firewrire', width:18, length:6.2, volume: 40, fins:'quad'},
+    let surfboards =[
+    {brand:'lost', width:24.6, length:5.6, volume: 30, fins:'thruster'},
+    {brand:'firewire', width:18 , length:6.2, volume: 40, fins:'quad'},
     {brand:'js', width:23.2, length:6.2, volume: 27, fins:'thruster'},
     {brand:'rusty', width:20.9, length:6.0, volume: 28, fins:'quad'},
     {brand:'santacruz', width:19.2, length:6.5, volume: 33, fins:'twin'}
     
 ];
 // post: returns all items in an array
-  exports.getAll = function getAll(arrayOfObjects)
+  var getAll = function()
 {
-
-   return JSON.stringify(arrayOfObjects);
+  return JSON.stringify(surfboards);
 }
 
 // post: returns the resqusted array item 
-exports.get = function get(width)
+ var get = function(brand)
 {
-    var found = surfboards.find(function(item) {
-        return JSON.stringify(item.width === width);
-      });
-      
+  let obj = surfboards.find(o => o.brand === 'firewire');
+  return JSON.stringify(obj);
+  //console.log(obj);
 }
 
 // post: delete the resquested item in an array
-exports.remove = function remove(array, element)
+ exports.delete  = function(element)
 {
-   array.splice(element,1);
-}
-
-// post: adds object to the array 
-exports.add = function add(array, object)
-{
-    array.push(object)
-    //console.log(array);
+   surfboards.splice(element,1);
 }
 
 
-//get(18);
-var person = {brand:'pyzel', width:18.2, length:5.9, volume: 27, fins:'thruster'};
-add(surfboards, person);
-remove(surfboards, 4);
-var test = getAll(surfboards);
-console.log(test);
+
+//console.log(obj);
+//exports.getAll = getAll; 
+//exports.get = get; 
+var lol = get('rusty');
+console.log(lol);
+//console.log(i);
+
+
+
+
 
