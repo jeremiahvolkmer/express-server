@@ -9,28 +9,39 @@ let surfboards =
 ];
 
   // post: returns all items in an array
-  exports.getAll = function()
+  exports.getAll = () =>
   {
     return surfboards;
   }
-
+ 
   // post: returns the resqusted array item 
-  exports.get = function(brand)
+  exports.get = (brand) =>
   {
     let found = surfboards.find(function(obj)
     {
     return obj.brand === brand;
     });
-    console.log(found);
+    
+    return found;
+  }
+   
+  // post: delete the resquested item in an array
+   exports.delete = (brand) =>
+  {
+    let found = surfboards.findIndex(function(obj)
+    {
+    return obj.brand === brand;
+    });
+    
+    if(!(found === -1))
+    {
+      surfboards.splice(found,1);
+    }
+    
     return found;
   }
 
-  // post: delete the resquested item in an array
-  exports.delete  = function(element)
-  {
-    surfboards.splice(element,1);
-    return surfboards;
-  }
+  
 
  
 

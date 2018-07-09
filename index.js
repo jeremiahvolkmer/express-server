@@ -1,31 +1,75 @@
 var http = require("http"); 
 var fs = require('fs');
+var querystring = require('querystring');
 var mod = require('./mod.js');
 
+http.createServer((req,res) => {
+  let url = req.url.split("?");  
+  let query = querystring.parse(url[1]); 
+  let path = url[0].toLowerCase();
 
-
-http.createServer(function(req,res) {
-  var path = req.url.toLowerCase();
-
-  switch(path) {
-    case '/getall':
-    fs.readFile('mod.js', function(err, data) {
-        res.writeHead(200, {'Content-Type': 'text/html'});
-        res.write(mod.getAll(surfboards));
-        res.end();
-        });
+switch(path)
+{
+    case '/':
+      res.writeHead(200, {'Content-Type': 'text/plain'});
+      res.end('Home page');
       break;
+
     case '/about':
       res.writeHead(200, {'Content-Type': 'text/plain'});
-      res.end('About page');
+      res.end('about page');
       break;
-    case '/':
-    res.writeHead(200, {'Content-Type': 'text/plain'});
-    res.end('Home page');
-    break;  
+
+    case '/getall':
+      fs.readFile('mod.js', function(err, data) 
+      {
+        res.writeHead(200, {'Content-Type': 'text/html'});
+        res.write(JSON.stringify(mod.getAll()));
+        res.end();
+      });
+    break;
+
+    case '/get':
+      fs.readFile('mod.js', function(err, data) 
+      {
+        let found = mod.get(query.brand)
+        res.writeHead(200, {'Content-Type': 'text/html'});
+        if(!found)
+        {
+          results = 'Object not found!';
+        }
+        else
+        {
+          results = JSON.stringify(found);
+        }
+        res.end(results);
+      });
+      break;
+    
+    case '/delete':
+      fs.readFile('mod.js', function(err, data)
+      {
+        let found = mod.delete(query.brand)
+
+        res.writeHead(200, {'Content-Type': 'text/html'});
+        if(found === -1)
+        {
+          results = 'Object not found!';
+          res.end('Not Found')
+        }
+        else
+        {
+           results = JSON.stringify(found);
+           res.end('removed ' + query.brand + ' at Index # ' + results);
+           
+        }
+        
+      });
+      break;
+    
     default:
       res.writeHead(404, {'Content-Type': 'text/plain'});
       res.end('Not found');
       break;
-    }
+}
 }).listen(process.env.PORT || 3000);
