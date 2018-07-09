@@ -11,15 +11,18 @@ http.createServer((req,res) => {
 switch(path)
 {
     case '/':
-      res.writeHead(200, {'Content-Type': 'text/plain'});
-      res.end('Home page');
+    fs.readFile('./public/home.html', function(err, data) {
+      res.writeHead(200, {'Content-Type': 'text/html'});
+      res.write(data);
+      res.end();
+    });
       break;
 
     case '/about':
       res.writeHead(200, {'Content-Type': 'text/plain'});
       res.end('about page');
       break;
-
+c
     case '/getall':
       fs.readFile('mod.js', function(err, data) 
       {
