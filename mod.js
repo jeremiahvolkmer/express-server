@@ -29,16 +29,19 @@ let surfboards =
    exports.delete = (brand) =>
   {
     let found = surfboards.findIndex(function(obj)
-    {
-    return obj.brand === brand;
-    });
+        {
+        return obj.brand === brand;
+        });
     
     if(!(found === -1))
     {
       surfboards.splice(found,1);
+      return true;
     }
     
-    return found;
+    else{return false}
+    
+    
   }
 
   
