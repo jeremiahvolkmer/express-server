@@ -63,7 +63,7 @@ c
         else
         {
            results = JSON.stringify(found);
-           res.end('removed ' + query.brand + ' at Index # ' + results);
+           res.end('removed ' + query.brand);
            
         }
         
