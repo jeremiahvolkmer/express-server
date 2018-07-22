@@ -1,7 +1,6 @@
 
 'use strict'
-
-let mod = require('./mod.js');
+let surfboard = require('./lib/surf_fun.js')
 const express = require('express');
 const app = express();
 
@@ -16,24 +15,35 @@ app.set("view engine", ".html");
 //send static file as a responce 
 app.get('/', (req, res) => 
 {
-    res.type('text/html');
-    res.sendFile(__dirname + '/public/home.html');
+    surfboard.getAll().then((items) => {
+        console.log(items);
+        res.render('home', {boards: items }); 
+      }).catch((err) =>{
+        return next(err);
+      });
+   
 });
 
-
 // send content of 'home' view
-app.get('/get', (req,res) => {
-    let result = mod.get(req.query.brand);
-    res.render('details', {brand: req.query.brand, result: result });
-   });
-
-app.get('/delete', (req, res) => 
-{
-    var test = mod.getAll();
-    var deleted = mod.delete(req.query.brand);
-    res.render("delete", {brand: req.query.brand, result: deleted, total: test.length});
+ app.get('/get', (req,res) => {
+     surfboard.get(req.query.brand).then((board) =>
+     {
+        res.render('details', {brand: req.query.brand, result: board });
+     }).catch((err) =>{
+        return next(err);
+      });
     
-})
+    });
+    
+ app.get('/delete', (req, res) => {
+    surfboard.delete(req.query.brand).then((board) =>
+    {
+        res.render("delete", {brand: req.query.brand, result: board});
+    }).catch((err) =>{
+       return next(err);
+     });
+   
+   });
 
 //send plain text as a responce 
 app.get('/about', (req, res) => {
@@ -41,11 +51,15 @@ app.get('/about', (req, res) => {
     res.send('About Page')
 })
 
-// handle POST
-app.post('/get',(req,res) =>{
-    var found = mod.get(req.body.brand);
-    res.render("details", {brand: req.body.brand, result: found});
-});
+app.post('/get', (req,res) => {
+    surfboard.get(req.body.brand).then((board) =>
+    {
+       res.render('details', {brand: req.body.brand, result: board });
+    }).catch((err) =>{
+       return next(err);
+     });
+   
+   });
 
 // define 404 handler
 app.use( (req,res) => {
