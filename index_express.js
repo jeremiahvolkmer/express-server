@@ -35,6 +35,16 @@ app.get('/', (req, res) =>
     
     });
     
+    app.get('/add', (req,res) => {
+      surfboard.get(req.query.brand).then((board) =>
+      {
+         res.render('add');
+      }).catch((err) =>{
+         return next(err);
+       });
+     
+     });
+
  app.get('/delete', (req, res) => {
     surfboard.delete(req.query.brand).then((board) =>
     {
@@ -59,7 +69,55 @@ app.post('/get', (req,res) => {
        return next(err);
      });
    
+});
+
+   //Return json get all 
+   app.get('/api/boards', (req, res) => 
+   {
+         surfboard.getAll().then((items) => {
+           //console.log(items);
+           res.json(items); 
+         }).catch((err) =>{
+           return next(err);
+         });
+      
    });
+
+
+   //Return json get one 
+   app.get('/api/get', (req,res) => {
+    surfboard.get(req.query.brand).then((board) =>
+    {
+       res.json(board)
+    }).catch((err) =>{
+       return next(err);
+     });
+   
+   });
+
+   //Return json delete
+   app.get('/api/delete', (req, res) => {
+    surfboard.delete(req.query.brand).then((board) =>
+    {
+        res.json(board);
+    }).catch((err) =>{
+       return next(err);
+     });
+   
+   }); 
+
+   app.post("/api/add", (req, res) => {
+    surfboard.save(req.body)
+    
+      .then(item => {
+        res.send("item saved to database");
+      })
+      .catch(err => {
+        res.status(400).send("unable to save to database");
+      });
+  });
+
+
 
 // define 404 handler
 app.use( (req,res) => {
