@@ -7,7 +7,7 @@ const app = express();
 app.set('port', process.env.PORT || 3000);
 app.use(express.static(__dirname + '/public'));
 app.use(require("body-parser").urlencoded({extended: true}));
-
+app.use('/api', require('cors')());
 let handlebars =  require("express-handlebars");
 app.engine(".html", handlebars({extname: '.html'}));
 app.set("view engine", ".html");
@@ -78,7 +78,7 @@ app.post('/get', (req,res) => {
            //console.log(items);
            res.json(items); 
          }).catch((err) =>{
-           return next(err);
+          res.status(400).send("unable to getall");
          });
       
    });
@@ -90,29 +90,28 @@ app.post('/get', (req,res) => {
     {
        res.json(board)
     }).catch((err) =>{
-       return next(err);
+      res.status(400).send("unable to get");
      });
    
    });
 
    //Return json delete
    app.get('/api/delete', (req, res) => {
-    surfboard.delete(req.query.brand).then((board) =>
+    surfboard.delete(req.query.brand).then((result) =>
     {
-        res.json(board);
+      res.json(result);
     }).catch((err) =>{
-       return next(err);
+      res.status(400).send("unable to delete");
      });
    
    }); 
 
    app.post("/api/add", (req, res) => {
-    surfboard.save(req.body)
-    
-      .then(item => {
+    surfboard.save(req.body).then(item => {
         res.send("item saved to database");
+        
       })
-      .catch(err => {
+      .catch((err) => {
         res.status(400).send("unable to save to database");
       });
   });
