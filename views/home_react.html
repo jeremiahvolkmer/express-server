@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>React hw 6</title>
+
+<!--In page script commands, use something like web pack in a professional setting-->
+<script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+<script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+<script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+</head>
+<body>
+        
+    <!--Render react element into the dom-->
+    <div id="root"></div>
+
+    <!--script type to support JSX-->
+    <script type="text/babel">
+
+       class Surfboard extends React.Component
+        {
+            constructor(props)
+            {
+                super(props);
+                // data from server 
+                this.state = 
+                {
+                    items: {{{boards}}},
+                    curItem: {} // current selected item
+                };
+            }
+        
+            // show item details when list item clicked
+            showDetails(event)
+            {
+                // event.target is item clicked. Assumes each item has an id attribute
+                let editItem = this.state.items.find((item) => 
+                {
+                    return item._id == event.target.id;
+                });
+                this.setState({curItem: editItem});
+            }
+        
+            render()
+            {
+                return (
+                    <div>
+                        <BoardsList 
+                            items={this.state.items}
+                            show={this.showDetails.bind(this)}/>
+                        <ItemDetails 
+                             item={this.state.curItem} />
+                    </div>
+                );
+            }
+        }
+
+        const BoardsList = ({items, filter, show}) => 
+        {
+            // generate array of item nodes
+            const itemNodes = items.map((item) => 
+            {
+                return <li id={item._id} key={item._id} onClick={show}>{item.brand}</li>
+            });
+            return <ul>{itemNodes}</ul>;
+        }
+
+        const ItemDetails = (props) => 
+        {
+            return (
+                <span>
+                    <h3>Details:</h3>
+                    <form onChange={props.change}>
+                        <input type="text" name="brand" placeholder="brand" value={props.item.brand || ""} /><p/>
+                        <input type="text" name="width" placeholder="width" value={props.item.width || ""} /><p/>
+                        <input type="text" name="length" placeholder="length" value={props.item.length || ""} /><p/>
+                        <input type="text" name="volume" placeholder="volume" value={props.item.volume || ""} /><p/>
+                        <input type="text" name="fins" placeholder="fins" value={props.item.fins || ""} /><p/>
+                    </form>
+                </span>);
+        }
+        
+        ReactDOM.render(<Surfboard />, document.getElementById('root'));
+    
+    </script>
+</body>
+</html>

@@ -17,7 +17,7 @@ app.get('/', (req, res) =>
 {
     surfboard.getAll().then((items) => {
         console.log(items);
-        res.render('home', {boards: items }); 
+        res.render('home_react', {boards: JSON.stringify(items) }); 
       }).catch((err) =>{
         return next(err);
       });
