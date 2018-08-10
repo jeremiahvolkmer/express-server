@@ -1,16 +1,19 @@
 
 'use strict'
 let surfboard = require('./lib/surf_fun.js')
+let bodyParser = require("body-parser");
 const express = require('express');
 const app = express();
 
 app.set('port', process.env.PORT || 3000);
 app.use(express.static(__dirname + '/public'));
-app.use(require("body-parser").urlencoded({extended: true}));
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.json())
 app.use('/api', require('cors')());
 let handlebars =  require("express-handlebars");
 app.engine(".html", handlebars({extname: '.html'}));
 app.set("view engine", ".html");
+
 
 //send static file as a responce 
 app.get('/', (req, res) => 

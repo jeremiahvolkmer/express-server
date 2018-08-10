@@ -27,6 +27,11 @@
                     items: {{{boards}}},
                     curItem: {} // current selected item
                 };
+
+                this.onDelete = this.onDelete.bind(this);
+                this.onClear = this.onClear.bind(this); 
+                this.onSave = this.onSave.bind(this);
+                this.onChange = this.onChange.bind(this);
             }
         
             // show item details when list item clicked
@@ -39,6 +44,77 @@
                 });
                 this.setState({curItem: editItem});
             }
+
+                  // clear details form
+                onClear()
+                {
+                    this.setState({curItem: {}});
+                }
+
+            // Handle item delete
+              onDelete()
+              {
+                  let brand = this.state.curItem.brand;
+                
+                  fetch('/api/delete?brand='+ brand).then((response) =>
+                  {
+                  return response.json();
+                  }).then((results) => {
+                  // Filter all items except the one to be removed
+                  const remainder = this.state.items.filter((item) =>
+                  {
+                      return item.brand !== brand;
+                  });
+                  // Update state with new array
+                  this.setState({items: remainder, curItem: {}});
+                  });
+              }
+
+               // Handle item save
+                onSave() 
+                {
+                    let newItem = this.state.curItem;
+                    if (!newItem.brand) 
+                    {
+                        return;
+                    }
+                    fetch("/api/add", 
+                    {
+                        method: "POST",
+                            headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(newItem)
+                    }).then(res => res.json())
+                        .then((json) => {
+                    let newData;
+                    if (!newItem._id) 
+                    { // add new item to array
+                        newData = this.state.items;
+                        newItem._id = json._id;
+                        newData.push(newItem);
+                    } else { // update existing item 
+                        newData = this.state.items.map((item) =>
+                        {
+                            if (item._id === newItem._id) 
+                            {
+                                item = newItem; 
+                            }
+                        return item;
+                        });          
+                    }
+            
+                    // Update state with new array
+                    this.setState({items: newData});
+                    });
+                }
+
+                 // handle detail changes
+                onChange(event) 
+                {
+                    var newItem = this.state.curItem;
+                    newItem[event.target.name] = event.target.value
+                    this.setState({curItem: newItem});
+                }
+     
         
             render()
             {
@@ -48,7 +124,12 @@
                             items={this.state.items}
                             show={this.showDetails.bind(this)}/>
                         <ItemDetails 
-                             item={this.state.curItem} />
+                             item={this.state.curItem}
+                             add={this.state.onAdd} 
+                             change={this.onChange}  
+                             reset={this.onClear} 
+                             delete={this.onDelete} />
+                              
                     </div>
                 );
             }
@@ -76,6 +157,7 @@
                         <input type="text" name="volume" placeholder="volume" value={props.item.volume || ""} /><p/>
                         <input type="text" name="fins" placeholder="fins" value={props.item.fins || ""} /><p/>
                     </form>
+                    <button onClick={props.add}>Add</button> <button onClick={props.reset}>Reset</button> <button onClick={props.delete}>Delete</button>
                 </span>);
         }
         
