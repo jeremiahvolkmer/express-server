@@ -27,10 +27,9 @@
                     items: {{{boards}}},
                     curItem: {} // current selected item
                 };
-
+                this.onAdd = this.onAdd.bind(this);
                 this.onDelete = this.onDelete.bind(this);
                 this.onClear = this.onClear.bind(this); 
-                this.onSave = this.onSave.bind(this);
                 this.onChange = this.onChange.bind(this);
             }
         
@@ -52,7 +51,7 @@
                 }
 
             // Handle item delete
-              onDelete()
+            onDelete()
               {
                   let brand = this.state.curItem.brand;
                 
@@ -70,34 +69,40 @@
                   });
               }
 
-               // Handle item save
-                onSave() 
+              // handle detail changes
+                onChange(event) 
                 {
+                    var newItem = this.state.curItem;
+                    newItem[event.target.name] = event.target.value
+                    this.setState({curItem: newItem});
+                }
+
+                onAdd()
+
+                {
+                    
+                    {
                     let newItem = this.state.curItem;
                     if (!newItem.brand) 
                     {
                         return;
                     }
-                    fetch("/api/add", 
-                    {
-                        method: "POST",
-                            headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(newItem)
+                    fetch('/api/add/', {
+                    method: "POST",
+                        headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(newItem)
                     }).then(res => res.json())
                         .then((json) => {
                     let newData;
-                    if (!newItem._id) 
-                    { // add new item to array
+                    if (!newItem._id) { // add new item to array
                         newData = this.state.items;
                         newItem._id = json._id;
                         newData.push(newItem);
                     } else { // update existing item 
-                        newData = this.state.items.map((item) =>
-                        {
-                            if (item._id === newItem._id) 
-                            {
-                                item = newItem; 
-                            }
+                        newData = this.state.items.map((item) => {
+                        if (item._id === newItem._id) {
+                            item = newItem; 
+                        }
                         return item;
                         });          
                     }
@@ -107,12 +112,6 @@
                     });
                 }
 
-                 // handle detail changes
-                onChange(event) 
-                {
-                    var newItem = this.state.curItem;
-                    newItem[event.target.name] = event.target.value
-                    this.setState({curItem: newItem});
                 }
      
         
@@ -124,11 +123,11 @@
                             items={this.state.items}
                             show={this.showDetails.bind(this)}/>
                         <ItemDetails 
-                             item={this.state.curItem}
-                             add={this.state.onAdd} 
+                             item={this.state.curItem} 
                              change={this.onChange}  
                              reset={this.onClear} 
-                             delete={this.onDelete} />
+                             delete={this.onDelete}
+                             add={this.onAdd} />
                               
                     </div>
                 );
@@ -157,7 +156,8 @@
                         <input type="text" name="volume" placeholder="volume" value={props.item.volume || ""} /><p/>
                         <input type="text" name="fins" placeholder="fins" value={props.item.fins || ""} /><p/>
                     </form>
-                    <button onClick={props.add}>Add</button> <button onClick={props.reset}>Reset</button> <button onClick={props.delete}>Delete</button>
+                    <button onClick={props.add}>Add</button> <button onClick={props.reset}>Reset</button> <button onClick={props.delete}>Delete</button> 
+                
                 </span>);
         }
         

@@ -100,8 +100,7 @@ app.post('/get', (req,res) => {
 
    //Return json delete
    app.get('/api/delete', (req, res) => {
-    surfboard.delete(req.query.brand).then((result) =>
-    {
+    surfboard.delete(req.query.brand).then((result) =>{
       res.json(result);
     }).catch((err) =>{
       res.status(400).send("unable to delete");
@@ -110,11 +109,9 @@ app.post('/get', (req,res) => {
    }); 
 
    app.post("/api/add", (req, res) => {
-    surfboard.save(req.body).then(item => {
-        res.send("item saved to database");
-        
-      })
-      .catch((err) => {
+    surfboard.save(req.body).then((item) => {
+      res.json(item);
+     }).catch((err) => {
         res.status(400).send("unable to save to database");
       });
   });
